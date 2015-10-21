@@ -1,5 +1,5 @@
 ﻿using System;
-using EQL;
+using EightQueensLogic;
 
 namespace EightQueensConsole
 {
@@ -7,7 +7,7 @@ namespace EightQueensConsole
     {
         public static void Main(string[] args)
         {
-            Solver solver = new Solver();
+            var solver = new EightQueensSolver();
             var result = solver.Solve();
             foreach (var tuple in result)
             {

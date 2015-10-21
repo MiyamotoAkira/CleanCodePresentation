@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EF37A467-264F-4165-A6AE-85C6345AC98C}</ProjectGuid>
+    <ProjectGuid>{E5760E3F-20D1-4276-8AB2-100E86F8F660}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>EightQueensLogic</RootNamespace>
-    <AssemblyName>EightQueensLogic</AssemblyName>
+    <RootNamespace>EightQueensLogicTests</RootNamespace>
+    <AssemblyName>EightQueensLogicTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -31,9 +31,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Proper\EightQueensSolver.cs" />
+    <Compile Include="Proper\EightQueensSolverTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -21,7 +21,6 @@ namespace EightQueensLogic
 
         public List<Tuple<int,int>> Solve()
         {
-
             var board = CreateBoard();
 
             FindSolution(board);
@@ -37,10 +36,10 @@ namespace EightQueensLogic
 
         void FindSolution(CellStatus[,] board)
         {
-            var starter = 0;
+            var startingColumn = 0;
             for (int row = 0; row < 8; row++)
             {
-                TryPlaceQueenOnRow(board, ref row, ref starter);
+                TryPlaceQueenOnRow(board, ref row, ref startingColumn);
             }
         }
 
@@ -51,7 +50,7 @@ namespace EightQueensLogic
             {
                 for (int column = 0; column < boardSize; column++)
                 {
-                    if (board[row, column] == CellStatus.Occupied)
+                    if (CellIsOccupied(board[row, column]))
                     {
                         result.Add(new Tuple<int, int>(row, column));
                     }
@@ -60,61 +59,107 @@ namespace EightQueensLogic
             return result;
         }
 
-        void TryPlaceQueenOnRow(CellStatus[,] board, ref int row, ref int starter)
+        void TryPlaceQueenOnRow(CellStatus[,] board, ref int row, ref int startingColumn)
+        {
+            var queenIsPlaced = TryPlaceQueenOnColumn(board, row, startingColumn);
+
+            if (queenIsPlaced)
+            {
+                startingColumn = 0;
+            }
+            else
+            {
+                startingColumn = RevertLastQueenPlacement(board, ref row);
+            }
+        }
+         
+        bool TryPlaceQueenOnColumn(CellStatus[,] board, int row, int startingColumn)
         {
             var queenIsPlaced = false;
-            for (int column = starter; column < boardSize; column++)
+            for (int column = startingColumn; column < boardSize; column++)
             {
                 queenIsPlaced = TryPlaceQueenOnCell(board, row, column);
-
                 if (queenIsPlaced)
                 {
                     break;
                 }
             }
 
-            if (!queenIsPlaced)
-            {
-                RevertLastQueenPlacement(board, ref row, ref starter);
-            }
-            else
-            {
-                starter = 0;
-            }
+            return queenIsPlaced;
         }
 
-        void RevertLastQueenPlacement(CellStatus[,] board, ref int row, ref int starter)
+        bool TryPlaceQueenOnCell(CellStatus[,] board, int row, int column)
+        {
+            if (ICanPlaceQueen(board[row, column]))
+            {
+                board[row, column] = CellStatus.Occupied;
+                MarkThreatenedCells(board, row, column);
+                return true;
+            }
+            return false;
+        }
+
+        int RevertLastQueenPlacement(CellStatus[,] board, ref int row)
+        {
+            row = MoveToPreviousRow(row);
+            var startingColumn = RemoveLastQueen(board, row);
+            row = MoveToPreviousRow(row);
+            ClearAllThreatenings(board);
+            CalculateAllThreatenings(board);
+            return startingColumn;
+        }
+
+        static int MoveToPreviousRow(int row)
         {
             row = row - 1;
-            for (int column = 0; column < boardSize; column++)
-            {
-                if (CellIsOccupied(board[row,column]))
-                {
-                    board[row, column] = CellStatus.Empty;
-                    starter = column + 1;
-                }
-            }
-            row = row - 1;
-            for (int rowToUpdate = 0; rowToUpdate < boardSize; rowToUpdate++)
-            {
-                for (int column = 0; column < boardSize; column++)
-                {
-                    if (CellIsNotOccupied(board[rowToUpdate,column]))
-                    {
-                        board[rowToUpdate, column] = CellStatus.Empty;
-                    }
-                }
-            }
+            return row;
+        }
+
+        void CalculateAllThreatenings(CellStatus[,] board)
+        {
             for (int rowToClear = 0; rowToClear < boardSize; rowToClear++)
             {
                 for (int columnToClear = 0; columnToClear < boardSize; columnToClear++)
                 {
-                    if (board[rowToClear, columnToClear] == CellStatus.Occupied)
+                    if (CellIsOccupied(board[rowToClear, columnToClear]))
                     {
                         MarkThreatenedCells(board, rowToClear, columnToClear);
                     }
                 }
             }
+        }
+
+        void ClearAllThreatenings(CellStatus[,] board)
+        {
+            for (int rowToUpdate = 0; rowToUpdate < boardSize; rowToUpdate++)
+            {
+                for (int column = 0; column < boardSize; column++)
+                {
+                    if (CellIsNotOccupied(board[rowToUpdate, column]))
+                    {
+                        ClearCell(board, rowToUpdate, column);
+                    }
+                }
+            }
+        }
+
+        static void ClearCell(CellStatus[,] board, int row, int column)
+        {
+            board[row, column] = CellStatus.Empty;
+        }
+
+        int RemoveLastQueen(CellStatus[,] board, int row)
+        {
+            int startingColumn = 0;
+            for (int column = 0; column < boardSize; column++)
+            {
+                if (CellIsOccupied(board[row, column]))
+                {
+                    ClearCell(board, row, column);
+                    startingColumn = column + 1;
+                }
+            }
+            return startingColumn;
         }
 
         void MarkThreatenedCells(CellStatus[,] board, int rowToClear, int columnToClear)
@@ -140,13 +185,18 @@ namespace EightQueensLogic
             ThreatenLowerRightDiagonal(board, rowToClear, columnToClear);
         }
 
+        static void ThreatenCell(CellStatus[,] board, int row, int column)
+        {
+            board[row, column] = CellStatus.Threatened;
+        }
+
         void ThreateLowerLeftDiagonal(CellStatus[,] board, int rowToClear, int columnToClear)
         {
             for (int columnToUpdate = columnToClear, rowToUpdate = rowToClear; columnToUpdate >= 0 && rowToUpdate >= 0; columnToUpdate--, rowToUpdate--)
             {
                 if (CellIsNotOccupied(board[rowToUpdate, columnToUpdate]))
                 {
-                    board[rowToUpdate, columnToUpdate] = CellStatus.Threatened;
+                    ThreatenCell(board, rowToUpdate, columnToUpdate);
                 }
             }
         }
@@ -157,7 +207,7 @@ namespace EightQueensLogic
             {
                 if (CellIsNotOccupied(board[rowToUpdate, columnToUpdate]))
                 {
-                    board[rowToUpdate, columnToUpdate] = CellStatus.Threatened;
+                    ThreatenCell(board, rowToUpdate, columnToUpdate);
                 }
             }
         }
@@ -168,7 +218,7 @@ namespace EightQueensLogic
             {
                 if (CellIsNotOccupied(board[rowToUpdate, columnToUpdate]))
                 {
-                    board[rowToUpdate, columnToUpdate] = CellStatus.Threatened;
+                    ThreatenCell(board, rowToUpdate, columnToUpdate);
                 }
             }
         }
@@ -179,44 +229,33 @@ namespace EightQueensLogic
             {
                 if (CellIsNotOccupied(board[rowToUpdate, columnToUpdate]))
                 {
-                    board[rowToUpdate, columnToUpdate] = CellStatus.Threatened;
+                    ThreatenCell(board, rowToUpdate, columnToUpdate);
                 }
             }
         }
 
-        void ThreatenSameColumn(CellStatus[,] board, int columnToClear)
+        void ThreatenSameColumn(CellStatus[,] board, int column)
         {
-            for (int rowToUpdate = 0; rowToUpdate < boardSize; rowToUpdate++)
+            for (int row = 0; row < boardSize; row++)
             {
-                if (CellIsNotOccupied(board[rowToUpdate, columnToClear]))
+                if (CellIsNotOccupied(board[row, column]))
                 {
-                    board[rowToUpdate, columnToClear] = CellStatus.Threatened;
+                    ThreatenCell(board, row, column);
                 }
             }
         }
 
-        void ThreatenSameRow(CellStatus[,] board, int rowToClear)
+        void ThreatenSameRow(CellStatus[,] board, int row)
         {
-            for (int columnToUpdate = 0; columnToUpdate < boardSize; columnToUpdate++)
+            for (int column = 0; column < boardSize; column++)
             {
-                if (CellIsNotOccupied(board[rowToClear, columnToUpdate]))
+                if (CellIsNotOccupied(board[row, column]))
                 {
-                    board[rowToClear, columnToUpdate] = CellStatus.Threatened;
+                    ThreatenCell(board, row, column);
                 }
             }
         }
-
-        bool TryPlaceQueenOnCell(CellStatus[,] board, int row, int column)
-        {
-            if (ICanPlaceQueen(board[row, column]))
-            {
-                board[row, column] = CellStatus.Occupied;
-                MarkThreatenedCells(board, row, column);
-                return true;
-            }
-            return false;
-        }
-
+            
         static bool ICanPlaceQueen(CellStatus cell)
         {
             return cell == CellStatus.Empty;

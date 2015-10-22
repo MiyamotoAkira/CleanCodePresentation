@@ -85,3 +85,21 @@ Because of the above, it is a bit more clear what is happening
 8. Extract internal method -> ThreatenRightToLeftDiagonal
 9. Extract internal method -> ThreatenLeftToRightDiagonal
 
+## ?
+1. Replace if (!queenIsPlace) -> if (queenIsPlaced)
+
+## Extract Methods
+1. Extract full for from TryPlaceQueenOnRow -> TryPlaceQueenOnColumn
+2. On RevertLastQueenPlacement -> RemoveLastQueen
+3. On RevertLastQueenPlacement -> CleanAllThreatenings
+4. On RevertLastQueenPlacement -> CalculateAllThreatenings
+5. On RevertLastQueenPlacement -> MoveToPreviousRow
+   Second is needed because we have a for loop that does row++
+
+
+## Naming
+1. rename starter -> startingColumn
+
+## ExtractMethods
+1. board[row,colum] == CellStatus.Empty -> ClearCell
+2. board[row,colum] == CellStatus.Threatened -> ThreatenCell

@@ -8,23 +8,23 @@ The following are the actions taken, plus commentaries on each one
 ## Naming (1)
 1. rename b to board
    This indicates what we are working with. We start to know about the domain we are working on.
-2. rename i to row
-   Now we assume the first one are the rows
-3. rename j to column
-   Then the columns.
+2. rename i to rank
+   Now we assume the first one are the ranks
+3. rename j to file
+   Then the files.
 4. create variable to hold the boardSize
    Eliminate magic number
 5. replace all 8s for boardSize
    Magic numbers are bad. They don't have information about their meaning. Avoid themn.
 
-6. rename x to rowToClear
-7. rename y to columnToClear
-8. rename k to columnToUpdate
-9. rename l to columnToUpdate
+6. rename x to rankToClear
+7. rename y to fileToClear
+8. rename k to fileToUpdate
+9. rename l to fileToUpdate
 	The above names are not very pretty, but they could be changed later on.
 
 ## Extract Methods (1)
-1. extract external for into its own method -> ProcessRow
+1. extract external for into its own method -> ProcessRank
 	Always eliminate levels of indentation.
 2. extract method that creates result -> ExtractSolution
 Because of the above, it is a bit more clear what is happening
@@ -39,45 +39,45 @@ Because of the above, it is a bit more clear what is happening
 
 	
 ## Naming (2)
-1. Create CellStatus enum
-2. Change board from int[,] to -> CellStatus[,]
-3. Change 0 when used on board value to -> CellStatus.Empty
-4. Change 1 when used on board value to -> CellStatus.Occupied
-5. Change 2 when used on board value to -> CellStatus.Threatened
+1. Create SquareStatus enum
+2. Change board from int[,] to -> SquareStatus[,]
+3. Change 0 when used on board value to -> SquareStatus.Empty
+4. Change 1 when used on board value to -> SquareStatus.Occupied
+5. Change 2 when used on board value to -> SquareStatus.Threatened
    Now the values have a meaning
    You can see that we are leaving so far all duplication. when you eliminate duplication is not code that is exactly the same, but code that achieves that applies the same logic to the same elements. Single reason to change.
    ToDo: Need to show an example where it will not happen.
 
 ## Extract Methods (2)
-1. extract the for columns inside Process -> ProcessCell
+1. extract the for files inside Process -> ProcessSquare
 2. extract the if not found -> RevertLastQueenPlacement
 
 ## Naming (3)
 1. rename found -> queenIsPlaced
-   Inside the new process Cell we eliminate found completely.
+   Inside the new process Square we eliminate found completely.
    Need to replace break -> for return true
    Then outside of the if return false;
    The break has to happen after the call
-2. rename ProcessRow -> TryPlaceQueenOnRow
+2. rename ProcessRank -> TryPlaceQueenOnRank
    The name doesn't tell you anything about what is going on.
-3. reanme ProcessCell -> TryPlaceQueenOnCell
+3. reanme ProcessSquare -> TryPlaceQueenOnSquare
 
 ## Extract Methods from conditions
-1. Replace the if ->CellIsNotOccupied
+1. Replace the if ->SquareIsNotOccupied
    We want to clearly indicate what is the reason
-2. Replace the if -> CellIsOccupied
+2. Replace the if -> SquareIsOccupied
 3. Replace the if with Empty -> ICanPlaceQueen
 
 ## Consolidate arguments
-1. Convert board, colum, row -> board[row, colum]
+1. Convert board, colum, rank -> board[rank, colum]
    They are used together, from the point of the method they are really a single entity
    Don't consolidate arguments just to reduce the number. Do they make sense consolidated?
 
 ## Extract Methods
-1. Extract threatening to ->  MarkThreatenedCells
+1. Extract threatening to ->  MarkThreatenedSquares
    Now we can do this becasuse not only the syntax is the same, the semantics of the code are exactly the same.
-2. Extract internal method -> ThreatenSameRow
-3. Extract internal method -> ThreatenSameColumn
+2. Extract internal method -> ThreatenSameRank
+3. Extract internal method -> ThreatenSameFile
 4. Extract internal method -> ThreatenUpperLeftDiagonal
 5. Extract internal method -> ThreatenLowerLeftDiagonal
 6. Extract internal method -> ThreatenUpperRightDiagonal
@@ -89,17 +89,21 @@ Because of the above, it is a bit more clear what is happening
 1. Replace if (!queenIsPlace) -> if (queenIsPlaced)
 
 ## Extract Methods
-1. Extract full for from TryPlaceQueenOnRow -> TryPlaceQueenOnColumn
+1. Extract full for from TryPlaceQueenOnRank -> TryPlaceQueenOnFile
 2. On RevertLastQueenPlacement -> RemoveLastQueen
 3. On RevertLastQueenPlacement -> CleanAllThreatenings
 4. On RevertLastQueenPlacement -> CalculateAllThreatenings
-5. On RevertLastQueenPlacement -> MoveToPreviousRow
-   Second is needed because we have a for loop that does row++
+5. On RevertLastQueenPlacement -> MoveToPreviousRank
+   Second is needed because we have a for loop that does rank++
 
 
 ## Naming
-1. rename starter -> startingColumn
+1. rename starter -> startingFile
 
 ## ExtractMethods
-1. board[row,colum] == CellStatus.Empty -> ClearCell
-2. board[row,colum] == CellStatus.Threatened -> ThreatenCell
+1. board[rank,colum] == SquareStatus.Empty -> ClearSquare
+2. board[rank,colum] == SquareStatus.Threatened -> ThreatenSquare
+3. convert for -> foreach
+4. extract if -> ThreatenFromOccupied
+5. extract if -> ClearNonOccupied
+6. extract if -> ThreatenNonOccupiedSquare

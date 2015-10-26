@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EightQueensLogic
 {
     public class EightQueensSolver
     {
-        public enum CellStatus
+        public enum SquareStatus
         {
             Empty,
             Occupied,
@@ -28,57 +29,57 @@ namespace EightQueensLogic
             return ExtractSolution(board);
         }
 
-        CellStatus[,] CreateBoard()
+        SquareStatus[,] CreateBoard()
         {
-            CellStatus[,] board = new CellStatus[boardSize, boardSize];
+            SquareStatus[,] board = new SquareStatus[boardSize, boardSize];
             return board;
         }
 
-        void FindSolution(CellStatus[,] board)
+        void FindSolution(SquareStatus[,] board)
         {
-            var startingColumn = 0;
-            for (int row = 0; row < 8; row++)
+            var startingfile = 0;
+            for (int rank = 0; rank < 8; rank++)
             {
-                TryPlaceQueenOnRow(board, ref row, ref startingColumn);
+                TryPlaceQueenOnRank(board, ref rank, ref startingfile);
             }
         }
 
-        List<Tuple<int, int>> ExtractSolution(CellStatus[,] board)
+        List<Tuple<int, int>> ExtractSolution(SquareStatus[,] board)
         {
             List<Tuple<int, int>> result = new List<Tuple<int, int>>();
-            for (int row = 0; row < boardSize; row++)
+            foreach (int rank in GetAllRanks())
             {
-                for (int column = 0; column < boardSize; column++)
+                foreach (int file in GetAllFiles())
                 {
-                    if (CellIsOccupied(board[row, column]))
+                    if (SquareIsOccupied(board[rank, file]))
                     {
-                        result.Add(new Tuple<int, int>(row, column));
+                        result.Add(new Tuple<int, int>(rank, file));
                     }
                 }
             }
             return result;
         }
 
-        void TryPlaceQueenOnRow(CellStatus[,] board, ref int row, ref int startingColumn)
+        void TryPlaceQueenOnRank(SquareStatus[,] board, ref int rank, ref int startingFile)
         {
-            var queenIsPlaced = TryPlaceQueenOnColumn(board, row, startingColumn);
+            var queenIsPlaced = TryPlaceQueenOnFile(board, rank, startingFile);
 
             if (queenIsPlaced)
             {
-                startingColumn = 0;
+                startingFile = 0;
             }
             else
             {
-                startingColumn = RevertLastQueenPlacement(board, ref row);
+                startingFile = RevertLastQueenPlacement(board, ref rank);
             }
         }
          
-        bool TryPlaceQueenOnColumn(CellStatus[,] board, int row, int startingColumn)
+        bool TryPlaceQueenOnFile(SquareStatus[,] board, int rank, int startingFile)
         {
             var queenIsPlaced = false;
-            for (int column = startingColumn; column < boardSize; column++)
+            for (int file = startingFile; file < boardSize; file++)
             {
-                queenIsPlaced = TryPlaceQueenOnCell(board, row, column);
+                queenIsPlaced = TryPlaceQueenOnSquare(board, rank, file);
                 if (queenIsPlaced)
                 {
                     break;
@@ -88,187 +89,194 @@ namespace EightQueensLogic
             return queenIsPlaced;
         }
 
-        bool TryPlaceQueenOnCell(CellStatus[,] board, int row, int column)
+        bool TryPlaceQueenOnSquare(SquareStatus[,] board, int rank, int file)
         {
-            if (ICanPlaceQueen(board[row, column]))
+            if (ICanPlaceQueen(board[rank, file]))
             {
-                board[row, column] = CellStatus.Occupied;
-                MarkThreatenedCells(board, row, column);
+                board[rank, file] = SquareStatus.Occupied;
+                MarkThreatenedSquares(board, rank, file);
                 return true;
             }
             return false;
         }
 
-        int RevertLastQueenPlacement(CellStatus[,] board, ref int row)
+        int RevertLastQueenPlacement(SquareStatus[,] board, ref int rank)
         {
-            row = MoveToPreviousRow(row);
-            var startingColumn = RemoveLastQueen(board, row);
-            row = MoveToPreviousRow(row);
+            rank = MoveToPreviousRank(rank);
+            var startingfile = RemoveLastQueen(board, rank);
+            rank = MoveToPreviousRank(rank);
             ClearAllThreatenings(board);
             CalculateAllThreatenings(board);
-            return startingColumn;
+            return startingfile;
         }
 
-        static int MoveToPreviousRow(int row)
+        static int MoveToPreviousRank(int rank)
         {
-            row = row - 1;
-            return row;
+            rank = rank - 1;
+            return rank;
         }
 
-        void CalculateAllThreatenings(CellStatus[,] board)
+        IEnumerable<int> GetAllRanks()
         {
-            for (int rowToClear = 0; rowToClear < boardSize; rowToClear++)
+            return Enumerable.Range(0, boardSize);
+        }
+        
+        IEnumerable<int> GetAllFiles()
+        {
+            return Enumerable.Range(0, boardSize);
+        }
+        
+        void ThreatenFromOccupied(SquareStatus[,] board, int rank, int file)
+        {
+            if (SquareIsOccupied(board[rank, file]))
             {
-                for (int columnToClear = 0; columnToClear < boardSize; columnToClear++)
-                {
-                    if (CellIsOccupied(board[rowToClear, columnToClear]))
-                    {
-                        MarkThreatenedCells(board, rowToClear, columnToClear);
-                    }
-                }
+                MarkThreatenedSquares(board, rank, file);
             }
         }
 
-        void ClearAllThreatenings(CellStatus[,] board)
+        void ClearNonOccupied(SquareStatus[,] board, int rank, int file)
         {
-            for (int rowToUpdate = 0; rowToUpdate < boardSize; rowToUpdate++)
+            if (SquareIsNotOccupied(board[rank, file]))
             {
-                for (int column = 0; column < boardSize; column++)
-                {
-                    if (CellIsNotOccupied(board[rowToUpdate, column]))
-                    {
-                        ClearCell(board, rowToUpdate, column);
-                    }
-                }
+                ClearSquare(board, rank, file);
             }
         }
 
-        static void ClearCell(CellStatus[,] board, int row, int column)
+        void CalculateAllThreatenings(SquareStatus[,] board)
         {
-            board[row, column] = CellStatus.Empty;
-        }
-
-        int RemoveLastQueen(CellStatus[,] board, int row)
-        {
-            int startingColumn = 0;
-            for (int column = 0; column < boardSize; column++)
+            foreach (int rank in GetAllRanks())
             {
-                if (CellIsOccupied(board[row, column]))
+                foreach (int file in GetAllFiles())
                 {
-                    ClearCell(board, row, column);
-                    startingColumn = column + 1;
-                }
-            }
-            return startingColumn;
-        }
-
-        void MarkThreatenedCells(CellStatus[,] board, int rowToClear, int columnToClear)
-        {
-            ThreatenSameRow(board, rowToClear);
-
-            ThreatenSameColumn(board, columnToClear);
-
-            ThreatenRightToLeftDiagonal(board, rowToClear, columnToClear);
-
-            ThreatenLeftToRightDiagonal(board, rowToClear, columnToClear);
-        }
-
-        void ThreatenLeftToRightDiagonal(CellStatus[,] board, int rowToClear, int columnToClear)
-        {
-            ThreatenUpperRightDiagonal(board, rowToClear, columnToClear);
-            ThreateLowerLeftDiagonal(board, rowToClear, columnToClear);
-        }
-
-        void ThreatenRightToLeftDiagonal(CellStatus[,] board, int rowToClear, int columnToClear)
-        {
-            ThreatenUpperLeftDiagonal(board, rowToClear, columnToClear);
-            ThreatenLowerRightDiagonal(board, rowToClear, columnToClear);
-        }
-
-        static void ThreatenCell(CellStatus[,] board, int row, int column)
-        {
-            board[row, column] = CellStatus.Threatened;
-        }
-
-        void ThreateLowerLeftDiagonal(CellStatus[,] board, int rowToClear, int columnToClear)
-        {
-            for (int columnToUpdate = columnToClear, rowToUpdate = rowToClear; columnToUpdate >= 0 && rowToUpdate >= 0; columnToUpdate--, rowToUpdate--)
-            {
-                if (CellIsNotOccupied(board[rowToUpdate, columnToUpdate]))
-                {
-                    ThreatenCell(board, rowToUpdate, columnToUpdate);
-                }
-            }
-        }
-
-        void ThreatenUpperRightDiagonal(CellStatus[,] board, int rowToClear, int columnToClear)
-        {
-            for (int columnToUpdate = columnToClear, rowToUpdate = rowToClear; columnToUpdate >= 0 && rowToUpdate < boardSize; columnToUpdate--, rowToUpdate++)
-            {
-                if (CellIsNotOccupied(board[rowToUpdate, columnToUpdate]))
-                {
-                    ThreatenCell(board, rowToUpdate, columnToUpdate);
-                }
-            }
-        }
-
-        void ThreatenLowerRightDiagonal(CellStatus[,] board, int rowToClear, int columnToClear)
-        {
-            for (int columnToUpdate = columnToClear, rowToUpdate = rowToClear; columnToUpdate < boardSize && rowToUpdate >= 0; columnToUpdate++, rowToUpdate--)
-            {
-                if (CellIsNotOccupied(board[rowToUpdate, columnToUpdate]))
-                {
-                    ThreatenCell(board, rowToUpdate, columnToUpdate);
-                }
-            }
-        }
-
-        void ThreatenUpperLeftDiagonal(CellStatus[,] board, int rowToClear, int columnToClear)
-        {
-            for (int columnToUpdate = columnToClear, rowToUpdate = rowToClear; columnToUpdate < boardSize && rowToUpdate < boardSize; columnToUpdate++, rowToUpdate++)
-            {
-                if (CellIsNotOccupied(board[rowToUpdate, columnToUpdate]))
-                {
-                    ThreatenCell(board, rowToUpdate, columnToUpdate);
-                }
-            }
-        }
-
-        void ThreatenSameColumn(CellStatus[,] board, int column)
-        {
-            for (int row = 0; row < boardSize; row++)
-            {
-                if (CellIsNotOccupied(board[row, column]))
-                {
-                    ThreatenCell(board, row, column);
-                }
-            }
-        }
-
-        void ThreatenSameRow(CellStatus[,] board, int row)
-        {
-            for (int column = 0; column < boardSize; column++)
-            {
-                if (CellIsNotOccupied(board[row, column]))
-                {
-                    ThreatenCell(board, row, column);
+                    ThreatenFromOccupied(board, rank, file);
                 }
             }
         }
             
-        static bool ICanPlaceQueen(CellStatus cell)
+        void ClearAllThreatenings(SquareStatus[,] board)
         {
-            return cell == CellStatus.Empty;
+            foreach (int rank in GetAllRanks())
+            {
+                foreach (int file in GetAllFiles())
+                {
+                    ClearNonOccupied(board, rank, file);
+                }
+            }
         }
 
-        bool CellIsOccupied(CellStatus cell)
+        static void ClearSquare(SquareStatus[,] board, int rank, int file)
         {
-            return cell == CellStatus.Occupied;
+            board[rank, file] = SquareStatus.Empty;
+        }
+
+        int RemoveLastQueen(SquareStatus[,] board, int rank)
+        {
+            int startingfile = 0;
+            foreach (int file in GetAllFiles())
+            {
+                if (SquareIsOccupied(board[rank, file]))
+                {
+                    ClearSquare(board, rank, file);
+                    startingfile = file + 1;
+                }
+            }
+            return startingfile;
+        }
+
+        void MarkThreatenedSquares(SquareStatus[,] board, int rankToClear, int fileToClear)
+        {
+            ThreatenSameRank(board, rankToClear);
+            ThreatenSameFile(board, fileToClear);
+            ThreatenRightToLeftDiagonal(board, rankToClear, fileToClear);
+            ThreatenLeftToRightDiagonal(board, rankToClear, fileToClear);
+        }
+
+        void ThreatenLeftToRightDiagonal(SquareStatus[,] board, int rankToClear, int fileToClear)
+        {
+            ThreatenUpperRightDiagonal(board, rankToClear, fileToClear);
+            ThreateLowerLeftDiagonal(board, rankToClear, fileToClear);
+        }
+
+        void ThreatenRightToLeftDiagonal(SquareStatus[,] board, int rankToClear, int fileToClear)
+        {
+            ThreatenUpperLeftDiagonal(board, rankToClear, fileToClear);
+            ThreatenLowerRightDiagonal(board, rankToClear, fileToClear);
+        }
+
+        static void ThreatenSquare(SquareStatus[,] board, int rank, int file)
+        {
+            board[rank, file] = SquareStatus.Threatened;
+        }
+
+        void ThreatenNonOccupiedSquare(SquareStatus[,] board, int rank, int file)
+        {
+            if (SquareIsNotOccupied(board[rank, file]))
+            {
+                ThreatenSquare(board, rank, file);
+            }
+        }
+
+        void ThreateLowerLeftDiagonal(SquareStatus[,] board, int rankToClear, int fileToClear)
+        {
+            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear; fileToUpdate >= 0 && rankToUpdate >= 0; fileToUpdate--, rankToUpdate--)
+            {
+                ThreatenNonOccupiedSquare(board, rankToUpdate, fileToUpdate);
+            }
+        }
+
+        void ThreatenUpperRightDiagonal(SquareStatus[,] board, int rankToClear, int fileToClear)
+        {
+            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear; fileToUpdate >= 0 && rankToUpdate < boardSize; fileToUpdate--, rankToUpdate++)
+            {
+                ThreatenNonOccupiedSquare(board, rankToUpdate, fileToUpdate);
+            }
+        }
+
+        void ThreatenLowerRightDiagonal(SquareStatus[,] board, int rankToClear, int fileToClear)
+        {
+            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear; fileToUpdate < boardSize && rankToUpdate >= 0; fileToUpdate++, rankToUpdate--)
+            {
+                ThreatenNonOccupiedSquare(board, rankToUpdate, fileToUpdate);
+            }
+        }
+
+        void ThreatenUpperLeftDiagonal(SquareStatus[,] board, int rankToClear, int fileToClear)
+        {
+            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear; fileToUpdate < boardSize && rankToUpdate < boardSize; fileToUpdate++, rankToUpdate++)
+            {
+                ThreatenNonOccupiedSquare(board, rankToUpdate, fileToUpdate);
+            }
+        }
+
+        void ThreatenSameFile(SquareStatus[,] board, int file)
+        {
+            for (int rank = 0; rank < boardSize; rank++)
+            {
+                ThreatenNonOccupiedSquare(board, rank, file);
+            }
+        }
+
+        void ThreatenSameRank(SquareStatus[,] board, int rank)
+        {
+            for (int file = 0; file < boardSize; file++)
+            {
+                ThreatenNonOccupiedSquare(board, rank, file);
+            }
+        }
+            
+        static bool ICanPlaceQueen(SquareStatus square)
+        {
+            return square == SquareStatus.Empty;
+        }
+
+        bool SquareIsOccupied(SquareStatus square)
+        {
+            return square == SquareStatus.Occupied;
         }
         
-        bool CellIsNotOccupied(CellStatus cell)
+        bool SquareIsNotOccupied(SquareStatus square)
         {
-            return cell != CellStatus.Occupied;
+            return square != SquareStatus.Occupied;
         }
 
     }

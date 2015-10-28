@@ -159,7 +159,8 @@ starter = j + 1;
 
 
 
-
+            // The below code gets all the found cells
+            // in b to return as the solution to the problem
             List<Tuple<int,int>> result = new List<Tuple<int,int>>();
             for (int i = 0; i <  8; i++)
             {

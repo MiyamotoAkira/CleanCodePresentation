@@ -16,12 +16,26 @@ The following are the actions taken, plus commentaries on each one
    Eliminate magic number
 5. replace all 8s for boardSize
    Magic numbers are bad. They don't have information about their meaning. Avoid themn.
-
-6. rename x to rankToClear
-7. rename y to fileToClear
-8. rename k to fileToUpdate
-9. rename l to fileToUpdate
-	The above names are not very pretty, but they could be changed later on.
+6. replace all 0s -> initialRank and initialSize
+7. rename x to rankToCheck
+8. rename y to fileToCheck
+9. rename k to fileToUpdate
+10. rename l to rankToUpdate
+The above names are not very pretty, but they could be changed later on.
+11. Create SquareStatus enum
+12. Change board from int[,] to -> SquareStatus[,]
+13. Change 0 when used on board value to -> SquareStatus.Empty
+14. Change 1 when used on board value to -> SquareStatus.Occupied
+15. Change 2 when used on board value to -> SquareStatus.Threatened
+   Now the values have a meaning
+   You can see that we are leaving so far all duplication. when you eliminate duplication is not code that is exactly the same, but code that achieves that applies the same logic to the same elements. Single reason to change.
+   ToDo: Need to show an example where it will not happen.
+16. rename f-> queenIsPlaced
+   Inside the new process Square we eliminate found completely.
+   Need to replace break -> for return true
+   Then outside of the if return false;
+   The break has to happen after the call
+17. rename starter -> startingFile
 
 ## Extract Methods (1)
 1. extract external for into its own method -> ProcessRank
@@ -38,29 +52,14 @@ Because of the above, it is a bit more clear what is happening
 	Make the point that, so far, no objects have been created. Clean Code is about readability, not SOLID.
 
 	
-## Naming (2)
-1. Create SquareStatus enum
-2. Change board from int[,] to -> SquareStatus[,]
-3. Change 0 when used on board value to -> SquareStatus.Empty
-4. Change 1 when used on board value to -> SquareStatus.Occupied
-5. Change 2 when used on board value to -> SquareStatus.Threatened
-   Now the values have a meaning
-   You can see that we are leaving so far all duplication. when you eliminate duplication is not code that is exactly the same, but code that achieves that applies the same logic to the same elements. Single reason to change.
-   ToDo: Need to show an example where it will not happen.
-
 ## Extract Methods (2)
 1. extract the for files inside Process -> ProcessSquare
 2. extract the if not found -> RevertLastQueenPlacement
 
 ## Naming (3)
-1. rename found -> queenIsPlaced
-   Inside the new process Square we eliminate found completely.
-   Need to replace break -> for return true
-   Then outside of the if return false;
-   The break has to happen after the call
-2. rename ProcessRank -> TryPlaceQueenOnRank
+1. rename ProcessRank -> TryPlaceQueenOnRank
    The name doesn't tell you anything about what is going on.
-3. reanme ProcessSquare -> TryPlaceQueenOnSquare
+2. reanme ProcessSquare -> TryPlaceQueenOnSquare
 
 ## Extract Methods from conditions
 1. Replace the if ->SquareIsNotOccupied
@@ -96,9 +95,6 @@ Because of the above, it is a bit more clear what is happening
 5. On RevertLastQueenPlacement -> MoveToPreviousRank
    Second is needed because we have a for loop that does rank++
 
-
-## Naming
-1. rename starter -> startingFile
 
 ## ExtractMethods
 1. board[rank,colum] == SquareStatus.Empty -> ClearSquare

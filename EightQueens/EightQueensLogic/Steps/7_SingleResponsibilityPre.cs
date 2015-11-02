@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EightQueensLogic
+namespace EQL_AbstractionPre
 {
     public class EightQueensSolver
     {
@@ -51,13 +51,18 @@ namespace EightQueensLogic
             {
                 foreach (int file in GetAllFiles())
                 {
-                    if (SquareIsOccupied(board[rank, file]))
-                    {
-                        result.Add(new Tuple<int, int>(rank, file));
-                    }
+                    AddQueenToResult(board, rank, file, result);
                 }
             }
             return result;
+        }
+
+        void AddQueenToResult(SquareStatus[,] board, int rank, int file, List<Tuple<int, int>> result)
+        {
+            if (SquareIsOccupied(board[rank, file]))
+            {
+                result.Add(new Tuple<int, int>(rank, file));
+            }
         }
 
         void TryPlaceQueenOnRank(SquareStatus[,] board, ref int rank, ref int startingFile)
@@ -73,7 +78,7 @@ namespace EightQueensLogic
                 startingFile = RevertLastQueenPlacement(board, ref rank);
             }
         }
-         
+
         bool TryPlaceQueenOnFile(SquareStatus[,] board, int rank, int startingFile)
         {
             var queenIsPlaced = false;
@@ -97,17 +102,18 @@ namespace EightQueensLogic
                 MarkThreatenedSquares(board, rank, file);
                 return true;
             }
+
             return false;
         }
 
         int RevertLastQueenPlacement(SquareStatus[,] board, ref int rank)
         {
             rank = MoveToPreviousRank(rank);
-            var startingfile = RemoveLastQueen(board, rank);
+            var startingFile = RemoveQueenOnRank(board, rank);
             rank = MoveToPreviousRank(rank);
             ClearAllThreatenings(board);
             CalculateAllThreatenings(board);
-            return startingfile;
+            return startingFile;
         }
 
         static int MoveToPreviousRank(int rank)
@@ -120,12 +126,12 @@ namespace EightQueensLogic
         {
             return Enumerable.Range(0, boardSize);
         }
-        
+
         IEnumerable<int> GetAllFiles()
         {
             return Enumerable.Range(0, boardSize);
         }
-        
+
         void ThreatenFromOccupied(SquareStatus[,] board, int rank, int file)
         {
             if (SquareIsOccupied(board[rank, file]))
@@ -152,7 +158,7 @@ namespace EightQueensLogic
                 }
             }
         }
-            
+
         void ClearAllThreatenings(SquareStatus[,] board)
         {
             foreach (int rank in GetAllRanks())
@@ -169,7 +175,7 @@ namespace EightQueensLogic
             board[rank, file] = SquareStatus.Empty;
         }
 
-        int RemoveLastQueen(SquareStatus[,] board, int rank)
+        int RemoveQueenOnRank(SquareStatus[,] board, int rank)
         {
             int startingfile = 0;
             foreach (int file in GetAllFiles())
@@ -180,6 +186,7 @@ namespace EightQueensLogic
                     startingfile = file + 1;
                 }
             }
+
             return startingfile;
         }
 
@@ -218,7 +225,9 @@ namespace EightQueensLogic
 
         void ThreateLowerLeftDiagonal(SquareStatus[,] board, int rankToClear, int fileToClear)
         {
-            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear; fileToUpdate >= 0 && rankToUpdate >= 0; fileToUpdate--, rankToUpdate--)
+            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear; 
+                fileToUpdate >= 0 && rankToUpdate >= 0;
+                fileToUpdate--, rankToUpdate--)
             {
                 ThreatenNonOccupiedSquare(board, rankToUpdate, fileToUpdate);
             }
@@ -226,7 +235,9 @@ namespace EightQueensLogic
 
         void ThreatenUpperRightDiagonal(SquareStatus[,] board, int rankToClear, int fileToClear)
         {
-            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear; fileToUpdate >= 0 && rankToUpdate < boardSize; fileToUpdate--, rankToUpdate++)
+            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear;
+                fileToUpdate >= 0 && rankToUpdate < boardSize;
+                fileToUpdate--, rankToUpdate++)
             {
                 ThreatenNonOccupiedSquare(board, rankToUpdate, fileToUpdate);
             }
@@ -234,7 +245,9 @@ namespace EightQueensLogic
 
         void ThreatenLowerRightDiagonal(SquareStatus[,] board, int rankToClear, int fileToClear)
         {
-            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear; fileToUpdate < boardSize && rankToUpdate >= 0; fileToUpdate++, rankToUpdate--)
+            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear; 
+                fileToUpdate < boardSize && rankToUpdate >= 0; 
+                fileToUpdate++, rankToUpdate--)
             {
                 ThreatenNonOccupiedSquare(board, rankToUpdate, fileToUpdate);
             }
@@ -242,7 +255,9 @@ namespace EightQueensLogic
 
         void ThreatenUpperLeftDiagonal(SquareStatus[,] board, int rankToClear, int fileToClear)
         {
-            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear; fileToUpdate < boardSize && rankToUpdate < boardSize; fileToUpdate++, rankToUpdate++)
+            for (int fileToUpdate = fileToClear, rankToUpdate = rankToClear;
+                fileToUpdate < boardSize && rankToUpdate < boardSize; 
+                fileToUpdate++, rankToUpdate++)
             {
                 ThreatenNonOccupiedSquare(board, rankToUpdate, fileToUpdate);
             }
@@ -250,7 +265,7 @@ namespace EightQueensLogic
 
         void ThreatenSameFile(SquareStatus[,] board, int file)
         {
-            for (int rank = 0; rank < boardSize; rank++)
+            foreach(int rank in GetAllRanks())
             {
                 ThreatenNonOccupiedSquare(board, rank, file);
             }
@@ -258,12 +273,12 @@ namespace EightQueensLogic
 
         void ThreatenSameRank(SquareStatus[,] board, int rank)
         {
-            for (int file = 0; file < boardSize; file++)
+            foreach(int file in GetAllFiles())
             {
                 ThreatenNonOccupiedSquare(board, rank, file);
             }
         }
-            
+
         static bool ICanPlaceQueen(SquareStatus square)
         {
             return square == SquareStatus.Empty;
@@ -273,12 +288,11 @@ namespace EightQueensLogic
         {
             return square == SquareStatus.Occupied;
         }
-        
+
         bool SquareIsNotOccupied(SquareStatus square)
         {
             return square != SquareStatus.Occupied;
         }
-
     }
 }
 

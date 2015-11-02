@@ -44,7 +44,7 @@
 					<h1>Clean Code</h1>
 					<h3>An exercise on readable code</h3>
 					<p>
-						<small>Created by <a href="http://twoormore.eu">Jorge Gueorguiev Garcia</a> / <a href="http://twitter.com/hakimel">@yefoakira</a></small>
+						<small style="vertical-align:middle">Created by <a href="http://twoormore.eu">Jorge Gueorguiev Garcia</a> / <a href="http://twitter.com/hakimel">@yefoakira</a></small>  <img style="vertical-align:middle; margin:0; border:0" width="50" data-src="img/twitter.png" alt="twitter img"/>
 					</p>
 				</section>
 
@@ -59,6 +59,14 @@
   				</section>
 
 				<section>
+				  <h2>Broken Window</h2>
+
+				  <aside class="notes">
+					1982 - Wilson &amp; Kelling
+				  </aside>
+				</section>
+				
+				<section>
 				  <h2>Who to say thanks</h2>
 				  <p class="fragment">
 					Uncle Bob - Clean Code
@@ -67,10 +75,10 @@
 					Sandi Metz - All the little things
 				  </p>
 				</section>
-				
-				<section width=1200>
+
+				<section>
 					<h2>Not Pretty Code</h2>
-					<pre><code class="hljs" data-trim>
+					<pre><code class="hljs csharp" data-trim>
 using System;
 using System.Collections.Generic;
 
@@ -253,137 +261,384 @@ starter = j + 1;
 					</code></pre>
 				</section>
 
+				<section data-background="img/Original_Code2.png" data-background-size="100%">
+				</section>
+				
 				<section>
 					<h2>Rules</h2>
 					<ul>
-						<li class="fragment">Semantically meaningful names</li>
-						<li class="fragment">One single level of indentation</li>
-						<li class="fragment">Conditionals extracted</li>
-						<li class="fragment">Same level abstraction</li>
-						<li class="fragment">Only comment <b>why</b></li>
+					  <li class="fragment">Boy Scout rule</li>
+					  <li class="fragment">Consistent visual style</li>
+					  <li class="fragment">Semantic names</li>
+					  <li class="fragment">Only comment <b>why</b></li>
+					  <li class="fragment">Indentation: One level, One line</li>
+					  <li class="fragment">Extract conditionals</li>
+					  <li class="fragment">Same level abstraction</li>
+					  <li class="fragment">Single responsibility principle</li>
 					</ul>
-				</section>
-
-				<section>
-					<h2>Fantastic Ordered List</h2>
-					<ol>
-						<li>One is smaller than...</li>
-						<li>Two is smaller than...</li>
-						<li>Three!</li>
-					</ol>
-				</section>
-
-				<section>
-					<h2>Tabular Tables</h2>
-					<table>
-						<thead>
-							<tr>
-								<th>Item</th>
-								<th>Value</th>
-								<th>Quantity</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Apples</td>
-								<td>$1</td>
-								<td>7</td>
-							</tr>
-							<tr>
-								<td>Lemonade</td>
-								<td>$2</td>
-								<td>18</td>
-							</tr>
-							<tr>
-								<td>Bread</td>
-								<td>$3</td>
-								<td>2</td>
-							</tr>
-						</tbody>
-					</table>
-				</section>
-
-				<section>
-					<h2>Clever Quotes</h2>
-					<p>
-						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;The nice thing about standards is that there are so many to choose from&rdquo;</q> and block:
-					</p>
-					<blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
-						reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
-					</blockquote>
-				</section>
-
-				<section>
-					<h2>Intergalactic Interconnections</h2>
-					<p>
-						You can link between slides internally,
-						<a href="#/2/3">like this</a>.
-					</p>
-				</section>
-
-				<section>
-					<h2>Speaker View</h2>
-					<p>There's a <a href="https://github.com/hakimel/reveal.js#speaker-notes">speaker view</a>. It includes a timer, preview of the upcoming slide as well as your speaker notes.</p>
-					<p>Press the <em>S</em> key to try it out.</p>
 
 					<aside class="notes">
-						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
+					  "There are seven rules." Show just on hand's fingers. Dissonance between what you hear and what you see. Which one is right?
 					</aside>
 				</section>
 
 				<section>
-					<h2>Export to PDF</h2>
-					<p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>, here's an example:</p>
-					<iframe src="https://www.slideshare.net/slideshow/embed_code/42840540" width="445" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:3px solid #666; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
+				  <h2>Boy Scouts rule</h2>
+				  <aside class="notes">
+					<p>Leave the code in a better state than you found it. It requires constant effort, to make it clean and to keep it clean.</p>
+				  </aside>				  
+				</section>
+				
+				<section>
+				  <section>
+					<h2>Consistent visual style</h2>
+					<aside class="notes">
+					  We, humans, have developed a quite complicated brain. One of the functions of our brain, is to interpret what our eyes see. To make the task easier, our brains try to recognize visual patterns. Visual patterns helps processing images easier and quick. Everything that you see, even if you think "Oh, those are letters", are, in fact, images.
+					</aside>
+				  </section>
+
+				  <section>
+					<img data-src="img/kanizsa_triangle.jpg" alt="kanizsa triangle"/>
+					<aside class="notes">
+					  Illusory contour
+					</aside>
+				  </section>
+
+				  <section>
+					<pre>
+					  <code class="hljs csharp">
+for (int k = y, l = x; k >= 0 && l < 8; k--, l++)
+        {
+
+
+
+		if (b[l, k] != 1)
+            {
+ b[l, k] = 2;
+                                    }
+                                }
+					  </code>
+					  <code class="hljs csharp">
+for (int k = y, l = x; k >= 0 && l < 8; k--, l++)
+{
+     if (b[l, k] != 1)
+     {
+         b[l, k] = 2;
+     }
+}
+					  </code>
+					</pre>
+				  </section>
 				</section>
 
 				<section>
-					<h2>Global State</h2>
-					<p>
-						Set <code>data-state="something"</code> on a slide and <code>"something"</code>
-						will be added as a class to the document element when the slide is open. This lets you
-						apply broader style changes, like switching the page background.
-					</p>
-				</section>
+				  <section>
+					<h2>Semantic names</h2>
+					<aside class="notes">
+					  <p>Give names based on the function of the variable/class/method to resolve the problem.
+					  </p>
+					  <p>
+						Take care as well of magic numbers and magic strings
+					  </p>
+					  <p>
+						Check Line 52 where the rank and file appear in different order. It's confusing.
+					  </p>
+					  <p>
+						Check also in line 96 where k is actually rank and not file.
+					  </p>
 
-				<section data-state="customevent">
-					<h2>State Events</h2>
-					<p>
-						Additionally custom events can be triggered on a per slide basis by binding to the <code>data-state</code> name.
-					</p>
-					<pre><code class="javascript" data-trim contenteditable style="font-size: 18px;">
-Reveal.addEventListener( 'customevent', function() {
-	console.log( '"customevent" has fired' );
-} );
-					</code></pre>
+					  <p>
+						Even when I could start doing extractions I need to do if what I'm going to extract makes sense to be extracted together. One thing is that two pieces of code do exactly the same. Another is that when one changes the other always changes
+					  </p>
+
+					  <p>
+						0,1,2 Have absolutely no meaning. What are they?
+					  </p>
+					</aside>
+					
+				  </section>
+
+				  <section>
+					<pre>
+					  <code class="hljs csharp" data-trim>
+for (int i = 0; i &lt; 8; i++)
+{
+    var f = false;
+	for (int j = starter; j &lt; 8; j++)
+    {
+	    if (b[i,j] == 0)						  
+					  </code>
+					  <code class="hljs csharp" data-trim>
+for (int rank = initialRank; rank &lt; boardSize; rank++)
+{
+    var queenIsPlaced = false;
+    for (int file = startingFile; file &lt; boardSize; file++)
+    {
+        if (board[rank, file] == 0)
+					   </code>
+				  </section>
+
+				  <section>
+					<pre>
+					  <code class="hljs csharp">
+if (b[i, k] != 1)
+{
+    b[i, k] = 2;
+}
+					  </code>
+					  <code class="hljs csharp">
+if (board[rank, fileToUpdate] != SquareStatus.QueenPlaced)
+{
+    board[rank, fileToUpdate] = SquareStatus.Threatened;
+}
+					  </code>
+					</pre>
+					</section>
 				</section>
 
 				<section>
-					<h2>Take a Moment</h2>
-					<p>
-						Press B or . on your keyboard to pause the presentation. This is helpful when you're on stage and want to take distracting slides off the screen.
-					</p>
+				  <section>
+					<h2>Only comment why</h2>
+					<aside class="notes">
+					  We use a good name to indicate the same as the comment.
+					</aside>
+				  </section>
+
+				  <section>
+					<pre>
+					  <code class="hljs csharp">
+// The below code gets all the found cells
+// in b to return as the solution to the problem
+List&lt;Tuple&lt;int,int&gt;&gt; result = new List&lt;Tuple&lt;int,int&gt;&gt;();
+for (int rank = initialRank; rank &lt; boardSize; rank++)
+{
+    for (int file = initialFile; file &lt; boardSize; file++)
+    {
+         if (board[rank, file] == SquareStatus.QueenPlaced)
+         {
+             result.Add(new Tuple&lt;int, int&gt;(rank, file));
+         }
+	}
+}
+
+return result;
+					  </code>
+					  <code class="hljs csharp">
+return ExtractSolutionFromBoardState(board);
+					  </code>
+					</pre>
+				  </section>
+				  
+				</section>
+				
+				<section>
+				  <section>
+					<h2>Indentation: one level, one line</h2>
+					<aside class="notes">
+					  <p>Each level of indentation is a context switch</p>
+					</aside>
+				  </section>
+
+				  <section>
+					<pre>
+					  <code class="hljs csharp">
+public List&lt;Tuple&lt;int,int&gt;&gt; Solve()
+{
+    SquareStatus[,] board = new SquareStatus[boardSize, boardSize];
+    for (int rank = initialRank; rank &lt; boardSize; rank++)
+    {
+        for (int file = initialFile; file &lt; boardSize; file++)
+        {
+             board[rank, file] = SquareStatus.Empty;
+        }
+    }
+					  </code>
+					  <code class="hljs csharp">
+public List&lt;Tuple&lt;int,int&gt;&gt; Solve()
+{
+    var board = CreateInitializedBoard();
+					  </code>
+					</pre>
+
+					<aside class="notes">
+					  <p> As much a possible we want a single level of indentation inside a class.
+					  </p>					  
+					</aside>
+					
+				  </section>
+
+				  <section>
+					<pre>
+					  <code class="hljs csharp">
+List&lt;Tuple&lt;int, int&gt;&gt; result = new List&lt;Tuple&lt;int, int&gt;&gt;();
+for (int rank = initialRank; rank &lt; boardSize; rank++)
+{
+    for (int file = initialFile; file &lt; boardSize; file++)
+    {
+        if (board[rank, file] == SquareStatus.QueenPlaced)
+        {
+            result.Add(new Tuple&lt;int, int&gt;(rank, file));
+        }
+    }
+}
+					  </code>
+					  <code class="hljs csharp">
+List&lt;Tuple&lt;int, int&gt;&gt; result = new List&lt;Tuple&lt;int, int&gt;&gt;();
+for (int rank = initialRank; rank &lt; boardSize; rank++)
+{
+    for (int file = initialFile; file &lt; boardSize; file++)
+    {
+        AddQueenToResult(board, rank, file, result);
+    }
+}
+					</code>
+					</pre>
+
+					<aside class="notes">
+					  <p>Sometimes a single level of indentation is not possible. Still we want a single line inside a new level of indentation. On this example we are reducing one level of indentation, and reducing the number of lines inside the second for to a single one.
+					  </p>					  
+					</aside>					
+				  </section>
+				  
 				</section>
 
 				<section>
-					<h2>Much more</h2>
-					<ul>
-						<li>Right-to-left support</li>
-						<li><a href="https://github.com/hakimel/reveal.js#api">Extensive JavaScript API</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#auto-sliding">Auto-progression</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#parallax-background">Parallax backgrounds</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#keyboard-bindings">Custom keyboard bindings</a></li>
-					</ul>
+				  <section>
+					<h2>Extract conditionals</h2>
+				  </section>
+
+				  <section>
+					<pre>
+					  <code class="hljs csharp">
+if (board[rankToUpdate, fileToUpdate] != SquareStatus.QueenPlaced)
+{
+    board[rankToUpdate, fileToUpdate] = SquareStatus.Threatened;
+}
+ 					  </code>
+					  <code class="hjls csharp">
+if (QueenIsNotPlacedOnSquare(board[rankToUpdate, fileToUpdate])
+{
+    board[rankToUpdate, fileToUpdate] = SquareStatus.Threatened;
+}
+					  </code>
+					</pre>
+				  </section>
+
+				  <section>
+					<pre>
+					  <code class="hjls csharp">
+if (currentCustomer.CustomerJourneyList != null && currentCustomer.CustomerJourneyList.Lenght &gt; 0)
+{
+                      </code>
+					  <code class="hjls csharp">
+if (CustomerHasJourneys(customer))
+{
+					  </code>
+					</pre>
+				  </section>
 				</section>
 
+				<section>
+				  <section>
+					<h2>Same level of abstraction</h2>
+					<aside class="notes">
+					  The how and the what should be separated.
+					</aside>
+				  </section>
+				  <section>
+					<pre>
+					  <code class="hljs csharp">
+ if (!queenIsPlaced)
+{
+    rank = rank - 1;
+    for (int file = initialFile; file &lt; boardSize; file++)
+    {
+        if (board[rank, file] == SquareStatus.QueenPlaced)
+        {
+            board[rank, file] = SquareStatus.Empty;
+            startingFile = file + 1;
+        }
+    }
+					  </code>
+					  <code class="hljs csharp">
+if (!queenIsPlaced)
+{
+    rank = rank - 1;
+    RemovePlacedQueenOnRank(board, ref startingFile, rank);					  
+					  </code>
+					</pre>
+				  </section>
+
+				  <section>
+					<pre>
+					  <code class="hljs csharp">
+ if (!queenIsPlaced)
+{
+    rank = rank - 1;
+    RemovePlacedQueenOnRank(board, ref startingFile, rank);					  
+					  </code>
+					  <code class="hljs csharp">
+if (!queenIsPlaced)
+{
+    rank = GoBackToPreviousRank(rank);
+    RemovePlacedQueenOnRank(board, ref startingFile, rank);					  
+					  </code>
+					</pre>
+				  </section>
+				</section>
+
+				<section>
+				  <section>
+					<h2>Single responsibility principle</h2>
+					<aside class="notes">
+					  <p>In fact, we have been doing this all along. It applies to methods, not oly to classes</p>
+					</aside>
+				  </section>
+
+				  <section data-background="img/ResponsibilityPre.png" data-background-size="100%">
+					<aside class="notes">
+					  <p>Check that, compared to the original there is little indentation.</p>
+					</aside>
+				  </section>
+
+				  <section data-background="img/ResponsibilityPost1.png" data-background-size="100%">
+					<aside class="notes">
+					  <p> The EightQueensSolver class is just now only about the algorithm to solve the problem</p>
+				  </section>
+
+				  <section data-background="img/ResponsibilityPost2.png" data-background-size="100%">
+					<aside class="notes">
+					  <p>Board class deals with the way to traverse the board, accessing the information inside</p>
+					  </aside>
+				  </section>
+
+				  <section data-background="img/ResponsibilityPost3.png" data-background-size="100%">
+					<aside class="notes">
+					  <p>Deals exclusively with the status of squares.</p>
+				  </section>
+				  
+				</section>
+
+				<section>
+				  <section>
+					<h2>The end result</h2>
+				  </section>
+				  <aside class="notes">
+					<p>Small classes, small methods, easy to read. Not happy though. Still improvement is possible. Should I remove from board everything related to square? (pass-through methods)<p>
+				  </aside>
+				</section>
+				
+				<section>
+				  <h2>Where to find all this</h2>
+				  <p class="fragment">
+					<img width="100" data-src="img/github.gif" alt="github image"/>
+					http://github.com/miyamotoakira/CleanCodePresentation
+				  </p>
+				</section>
+				
 				<section style="text-align: left;">
-					<h1>THE END</h1>
-					<p>
-						- <a href="http://slides.com">Try the online editor</a> <br>
-						- <a href="https://github.com/hakimel/reveal.js">Source code &amp; documentation</a>
-					</p>
+				  <h1>THE END</h1>
+				  <h2>Q&amp;A if you are so inclined</h2>
 				</section>
 
 			</div>
@@ -403,7 +658,7 @@ Reveal.addEventListener( 'customevent', function() {
 				history: true,
 				center: true,
 
-				transition: 'slide', // none/fade/slide/convex/concave/zoom
+				transition: 'concave', // none/fade/slide/convex/concave/zoom
 
 				// Optional reveal.js plugins
 				dependencies: [

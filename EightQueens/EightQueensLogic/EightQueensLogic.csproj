@@ -33,10 +33,17 @@
   <ItemGroup>
     <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="NoObject\EightQueensSolver.cs" />
+    <Compile Include="Steps\1_Visual style.cs" />
+    <Compile Include="Steps\2_Naming.cs" />
+    <Compile Include="Steps\3_OnlyCommentWhy.cs" />
+    <Compile Include="Steps\4_OneLevelIndentation.cs" />
+    <Compile Include="Steps\5_ExtractConditionals.cs" />
+    <Compile Include="Steps\6_SameAbstractionLevel.cs" />
+    <Compile Include="Steps\7_SingleResponsibilityPre.cs" />
+    <Compile Include="Steps\8_SingleResponsibilityPost.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="NoObject\" />
+    <Folder Include="Steps\" />
   </ItemGroup>
 </Project>

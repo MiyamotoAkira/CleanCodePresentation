@@ -1,5 +1,5 @@
 ﻿using System;
-using EightQueensLogic;
+using EQL_AbstractionPost;
 
 namespace EightQueensConsole
 {

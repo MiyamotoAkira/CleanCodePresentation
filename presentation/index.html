@@ -452,11 +452,19 @@ public List&lt;Tuple&lt;int,int&gt;&gt; Solve()
              board[rank, file] = SquareStatus.Empty;
         }
     }
+
+    var startingFile = 0;
+    for (int rank = initialRank; rank &lt; boardSize; rank++)
+    {
 					  </code>
 					  <code class="hljs csharp">
 public List&lt;Tuple&lt;int,int&gt;&gt; Solve()
 {
     var board = CreateInitializedBoard();
+
+    var startingFile = 0;
+    for (int rank = initialRank; rank &lt; boardSize; rank++)
+    {
 					  </code>
 					</pre>
 
